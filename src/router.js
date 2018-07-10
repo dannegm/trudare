@@ -1,21 +1,28 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+import Cards from './views/Cards';
+import List from './views/List';
+import About from './views/About';
 
-export default new Router({
+Vue.use (Router);
+
+export default new Router ({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'cards',
+      component: Cards
     },
     {
-      path: '/about',
-      name: 'about',
-      component: About
-    }
+      path: '/cards/:uuid',
+      name: 'cards',
+      component: Cards
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: List
+    },
   ]
-})
+});

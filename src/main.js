@@ -1,10 +1,35 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
+import '@fortawesome/fontawesome-free/css/all.css';
+import '@babel/polyfill';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import Vuetify from 'vuetify';
+import VueClipboard from 'vue-clipboard2';
 
-Vue.config.productionTip = false
+import './plugins/vuetify';
+import router from './router';
+import App from './App.vue';
 
-new Vue({
+Vue.use (Vuex);
+Vue.use (VueClipboard);
+Vue.use (Vuetify, {
+  iconfont: 'fa'
+});
+
+const store = new Vuex.Store ({
+  state: {
+    level: 3
+  },
+  mutations: {
+    level (state, level) {
+      state.level = level;
+    }
+  }
+});
+
+Vue.config.productionTip = false;
+
+new Vue ({
   router,
-  render: h => h(App)
-}).$mount('#app')
+  store,
+  render: h => h (App)
+}).$mount ('#app');
