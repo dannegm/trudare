@@ -6,7 +6,7 @@
         <v-icon>home</v-icon>
       </v-btn>
 
-      <v-avatar v-if="auth.is">
+      <v-avatar v-if="auth.is" size="32">
         <img
           :src="auth.photoURL"
           alt="Avatar" >
@@ -56,7 +56,7 @@
 
 <script>
 import { levels, levelsColors } from '@/utils';
-import { firebase, auth } from '@/services/firebase';
+import { firebase, database, auth } from '@/services/firebase';
 const GoogleAuthProvider = new firebase.auth.GoogleAuthProvider ();
 
 export default {
@@ -78,12 +78,27 @@ export default {
     this.colors = levelsColors;
     this.$store.commit ('level', this.level);
 
-    auth.onAuthStateChanged ((user) => {
+    auth.onAuthStateChanged (user => {
       this.auth.is = user ? true : false;
-      this.auth.uid = user.uid;
-      this.auth.name = user.displayName;
-      this.auth.email = user.email;
-      this.auth.photoURL = user.photoURL;
+      if (this.auth.is) {
+        this.auth.uid = user.uid;
+        this.auth.name = user.displayName;
+        this.auth.email = user.email;
+        this.auth.photoURL = user.photoURL;
+
+        database.ref (`users/${user.uid}`).once ('value', results => {
+          if (!results.val ()) {
+            database.ref (`users/${user.uid}`).set ({
+              uid : user.uid,
+              email: user.email,
+              name: user.displayName,
+              role: 'player',
+              timestamp: (new Date).getTime (),
+              photoURL: user.photoURL,
+            });
+          }
+        });
+      }
     });
   },
   data () {

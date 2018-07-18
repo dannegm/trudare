@@ -51,13 +51,13 @@
               </v-btn>
             </v-flex>
 
-            <v-flex sm2 xs3 text-xs-center>
+            <v-flex sm2 xs4 text-xs-center>
               <v-btn color="blue" dark fab @click="getRandom">
                 <v-icon>fa-random</v-icon>
               </v-btn>
             </v-flex>
 
-            <v-flex  sm3 xs4>
+            <v-flex sm3 xs4>
               <v-btn color="red" dark block round @click="getDare">
                 <span>RETO</span>
               </v-btn>
