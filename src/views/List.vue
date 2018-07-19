@@ -35,7 +35,7 @@
 
                 <v-list-tile-action>
                   <v-list-tile-action-text>{{item.time}}</v-list-tile-action-text>
-                  <v-btn icon v-if="auth.is">
+                  <v-btn icon v-if="auth.is && user.role == 'super'">
                     <v-icon color="grey lighten-1" small>fa-pen</v-icon>
                   </v-btn>
                 </v-list-tile-action>
@@ -53,17 +53,23 @@
 </template>
 
 <script>
-import { transformItem, levelsColors } from '@/utils';
 import { database, auth } from '@/services/firebase';
+import { transformItem, levelsColors } from '@/utils';
 
 export default {
   async mounted () {
     this.colors = levelsColors;
     auth.onAuthStateChanged ((user) => {
       this.auth.is = user ? true : false;
+      if (this.auth.is) {
+        this.auth.uid = user.uid;
+        database.ref (`users/${user.uid}`).once ('value', results => {
+          this.user = results.val ();
+        });
+      }
     });
 
-    database.ref ('actions/').on ('value', results => {
+    database.ref ('cards/').on ('value', results => {
       this.loaded = true;
       this.items = Object.values (results.val ()).map (i => transformItem (i));
       this.filtered = this.items.filter (i => i.level <= this.level);
@@ -83,7 +89,9 @@ export default {
     return {
       auth: {
         is: false,
+        uid: null,
       },
+      user: {},
       loaded: false,
       items: [],
       filtered: [],

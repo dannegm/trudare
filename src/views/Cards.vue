@@ -79,13 +79,13 @@ export default {
   methods: {
     doLike (uuid) {
       let count = this.item.rate.likes;
-      database.ref (`actions/${uuid}/rate`).update ({
+      database.ref (`cards/${uuid}/rate`).update ({
         likes:  ++count,
       });
     },
     doDislike (uuid) {
       let count = this.item.rate.dislikes;
-      database.ref (`actions/${uuid}/rate`).update ({
+      database.ref (`cards/${uuid}/rate`).update ({
         dislikes:  ++count,
       });
     },
@@ -132,7 +132,7 @@ export default {
       this.auth.is = user ? true : false;
     });
 
-    database.ref ('actions/').on ('value', results => {
+    database.ref ('cards/').on ('value', results => {
       this.loaded = true;
       this.items = results.val ();
       this.getItem ();

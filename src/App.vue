@@ -6,9 +6,32 @@
         <v-icon>home</v-icon>
       </v-btn>
 
-      <v-avatar v-if="auth.is" size="32">
+
+      <v-badge v-if="auth.is && user.role == 'super'"
+        right overlap color="purple">
+        <v-icon slot="badge" dark size="10">fa-star</v-icon>
+        <v-avatar size="32">
+          <img
+            :src="user.photoURL"
+            alt="Avatar" >
+        </v-avatar>
+      </v-badge>
+
+      <v-badge v-if="auth.is && user.role == 'moder'"
+        right overlap color="grey darken-1">
+        <v-icon slot="badge" dark size="10">fa-glasses</v-icon>
+        <v-avatar size="32">
+          <img
+            :src="user.photoURL"
+            alt="Avatar" >
+        </v-avatar>
+      </v-badge>
+
+      <v-avatar
+        v-if="auth.is && (user.role != 'super' && user.role != 'moder')"
+        size="32">
         <img
-          :src="auth.photoURL"
+          :src="user.photoURL"
           alt="Avatar" >
       </v-avatar>
 
@@ -82,20 +105,19 @@ export default {
       this.auth.is = user ? true : false;
       if (this.auth.is) {
         this.auth.uid = user.uid;
-        this.auth.name = user.displayName;
-        this.auth.email = user.email;
-        this.auth.photoURL = user.photoURL;
-
         database.ref (`users/${user.uid}`).once ('value', results => {
           if (!results.val ()) {
-            database.ref (`users/${user.uid}`).set ({
+            this.user = {
               uid : user.uid,
               email: user.email,
               name: user.displayName,
               role: 'player',
               timestamp: (new Date).getTime (),
               photoURL: user.photoURL,
-            });
+            };
+            database.ref (`users/${user.uid}`).set (this.user);
+          } else {
+            this.user = results.val ();
           }
         });
       }
@@ -106,10 +128,8 @@ export default {
       auth: {
         is: false,
         uid: null,
-        name: null,
-        email: null,
-        photoURL: null,
       },
+      user: {},
       title: 'Truth or Dare',
       level: 3,
       levels: [],

@@ -8,9 +8,17 @@
         ".write": "auth != null && auth.uid == $uid"
       }
     },
-    "actions": {
+    "cards": {
       ".read": true,
-      ".write": "root.child('users/' + auth.uid).exists() && root.child('users/' + auth.uid + '/role').val() == 'super'"
+      "$card_uuid": {
+        ".write": "root.child('users/' + auth.uid).exists() && (root.child('users/' + auth.uid + '/role').val() == 'super' || root.child('cards/' + $card_uuid + '/author_uid').val() == auth.uid)",
+        "rate": {
+          ".write": true
+        },
+        "status": {
+          ".write": "root.child('users/' + auth.uid).exists() && root.child('users/' + auth.uid + '/role').val() == 'super'"
+        }
+      }
     }
   }
 }

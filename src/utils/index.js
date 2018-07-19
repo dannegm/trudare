@@ -31,6 +31,7 @@ function rand (from, to) {
 
 function transformItem (item) {
   return {
+    uuid: item.uuid,
     title: item.text,
     levelTxt: levels [ item.level ],
     level: item.level,
