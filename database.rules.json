@@ -3,6 +3,7 @@
     "users": {
       ".read": true,
       ".write": true,
+
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"
@@ -10,10 +11,17 @@
     },
     "cards": {
       ".read": true,
+      ".write": true,
+
       "$card_uuid": {
         ".write": "root.child('users/' + auth.uid).exists() && (root.child('users/' + auth.uid + '/role').val() == 'super' || root.child('cards/' + $card_uuid + '/author_uid').val() == auth.uid)",
         "rate": {
-          ".write": true
+          "likes": {
+            ".write": true
+          },
+          "dislikes": {
+            ".write": true
+          }
         },
         "status": {
           ".write": "root.child('users/' + auth.uid).exists() && root.child('users/' + auth.uid + '/role').val() == 'super'"
